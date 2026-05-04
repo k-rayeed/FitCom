@@ -15,7 +15,7 @@
 
 <div class="dash-wrapper">
 
-//sidebar
+
     <aside class="sidebar">
         <div class="sidebar-logo">
             ⚡ <span class="logo-text">FITCOM</span>
@@ -47,7 +47,7 @@
                 🔍 Search
             </a>
 
-//trainer
+
 <div style="padding: 16px 20px; border-top: 1px solid #2a2d3a; margin-top: auto;">
 
     <% if (user.userType === 'trainer') { %>
@@ -101,7 +101,6 @@
             </div>
         </div>
 
-//goals and reminders
 
         <% if (goals && goals.length > 0) { %>
         <div class="dash-card">
@@ -132,7 +131,7 @@
         <% } %>
         <br>
 
-//notifications
+
         <% if (notifications && notifications.length > 0) { %>
         <div class="dash-card">
             <div class="card-title">🔔 Notifications</div>
@@ -202,7 +201,6 @@
                     </form>
                 </div>
 
-//community feed
                 <div class="card-title">🌍 Feed</div>
 
                 <% if (posts.length === 0) { %>
