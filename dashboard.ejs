@@ -8,7 +8,6 @@
 
     <link rel="stylesheet" href="/style.css">
 
-    <!-- SAME FONT EVERYWHERE -->
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
@@ -16,7 +15,7 @@
 
 <div class="dash-wrapper">
 
-    <!-- SIDEBAR -->
+//sidebar
     <aside class="sidebar">
         <div class="sidebar-logo">
             ⚡ <span class="logo-text">FITCOM</span>
@@ -48,8 +47,7 @@
                 🔍 Search
             </a>
 
-
-        <!-- Trainer Section -->
+//trainer
 <div style="padding: 16px 20px; border-top: 1px solid #2a2d3a; margin-top: auto;">
 
     <% if (user.userType === 'trainer') { %>
@@ -95,12 +93,7 @@
         <a href="/logout" class="sidebar-logout">🚪 Logout</a>
     </aside>
 
-
-
-    <!-- MAIN -->
     <main class="dash-main">
-
-        <!-- HEADER -->
         <div class="dash-header">
             <div>
                 <h2 class="dash-welcome">Hey, <%= user.name %> 👋</h2>
@@ -108,9 +101,8 @@
             </div>
         </div>
 
-        
+//goals and reminders
 
-        <!-- 🎯 GOALS (DYNAMIC + REMINDER) -->
         <% if (goals && goals.length > 0) { %>
         <div class="dash-card">
             <div class="card-title">🎯 Your Goals</div>
@@ -140,7 +132,7 @@
         <% } %>
         <br>
 
-        <!-- 🔔 NOTIFICATIONS -->
+//notifications
         <% if (notifications && notifications.length > 0) { %>
         <div class="dash-card">
             <div class="card-title">🔔 Notifications</div>
@@ -161,7 +153,6 @@
         </div>
         <% } %>
         <br>
-        <!-- STATS -->
         <div class="stats-row">
             <div class="stat-card">
                 🔥 <%= streak %><br>
@@ -186,7 +177,6 @@
 
         <div class="dash-grid">
 
-            <!-- LEFT -->
             <div class="dash-col">
 
                 <div class="dash-card">
@@ -202,8 +192,6 @@
                 </div>
 
             </div>
-
-            <!-- RIGHT -->
             <div class="dash-col">
 
                 <div class="dash-card">
@@ -214,6 +202,7 @@
                     </form>
                 </div>
 
+//community feed
                 <div class="card-title">🌍 Feed</div>
 
                 <% if (posts.length === 0) { %>
