@@ -1,31 +1,8 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1
--- Generation Time: May 04, 2026 at 01:27 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
 
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Database: `fitness_tracker`
---
-
--- --------------------------------------------------------
-
---
--- Table structure for table `activity_log`
---
 
 CREATE TABLE `activity_log` (
   `log_id` int(11) NOT NULL,
@@ -35,9 +12,6 @@ CREATE TABLE `activity_log` (
   `date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `activity_log`
---
 
 INSERT INTO `activity_log` (`log_id`, `userID`, `w_id`, `duration`, `date`) VALUES
 (1, 4, 8, 120, '2026-05-02'),
@@ -49,49 +23,29 @@ INSERT INTO `activity_log` (`log_id`, `userID`, `w_id`, `duration`, `date`) VALU
 (7, 6, 3, 120, '2026-05-04'),
 (8, 10, 2, 40, '2026-05-04');
 
--- --------------------------------------------------------
-
---
--- Table structure for table `badges`
---
 
 CREATE TABLE `badges` (
   `name` varchar(100) NOT NULL,
   `description` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `badges`
---
 
 INSERT INTO `badges` (`name`, `description`) VALUES
 ('Bronze', 'Complete 5 daily challenges in a row'),
 ('Gold', 'Complete 25 daily challenges in a row'),
 ('Silver', 'Complete 10 daily challenges in a row');
 
--- --------------------------------------------------------
-
---
--- Table structure for table `challenge`
---
 
 CREATE TABLE `challenge` (
   `userID` int(11) NOT NULL,
   `c_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `challenge`
---
 
 INSERT INTO `challenge` (`userID`, `c_id`) VALUES
 (10, 2);
 
--- --------------------------------------------------------
 
---
--- Table structure for table `challenge_info`
---
 
 CREATE TABLE `challenge_info` (
   `c_id` int(11) NOT NULL,
@@ -100,19 +54,13 @@ CREATE TABLE `challenge_info` (
   `goal` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `challenge_info`
---
+
 
 INSERT INTO `challenge_info` (`c_id`, `name`, `date`, `goal`) VALUES
 (1, 'Yoga', '2026-05-03', 'Complete 35 minutes of Yoga'),
 (2, 'Walking', '2026-05-04', 'Complete 26 minutes of Walking');
 
--- --------------------------------------------------------
 
---
--- Table structure for table `earns`
---
 
 CREATE TABLE `earns` (
   `userID` int(11) NOT NULL,
@@ -120,20 +68,14 @@ CREATE TABLE `earns` (
   `date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
 
---
--- Table structure for table `friends`
---
 
 CREATE TABLE `friends` (
   `f1UserID` int(11) NOT NULL,
   `f2UserID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `friends`
---
+
 
 INSERT INTO `friends` (`f1UserID`, `f2UserID`) VALUES
 (1, 10),
@@ -159,11 +101,7 @@ INSERT INTO `friends` (`f1UserID`, `f2UserID`) VALUES
 (10, 7),
 (10, 9);
 
--- --------------------------------------------------------
 
---
--- Table structure for table `goals`
---
 
 CREATE TABLE `goals` (
   `goal_id` int(11) NOT NULL,
@@ -175,20 +113,13 @@ CREATE TABLE `goals` (
   `created_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `goals`
---
 
 INSERT INTO `goals` (`goal_id`, `userID`, `title`, `description`, `target_date`, `is_completed`, `created_at`) VALUES
 (1, 6, 'sleep at 10pm', NULL, '2026-05-04', 0, '2026-05-04 03:36:38'),
 (2, 10, 'Run 1 km', NULL, '2026-05-04', 0, '2026-05-04 17:06:20'),
 (3, 10, 'Run 1 km without stoopping', NULL, NULL, 0, '2026-05-04 17:06:41');
 
--- --------------------------------------------------------
 
---
--- Table structure for table `message`
---
 
 CREATE TABLE `message` (
   `sender` int(11) NOT NULL,
@@ -197,9 +128,7 @@ CREATE TABLE `message` (
   `content` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `message`
---
+
 
 INSERT INTO `message` (`sender`, `receiver`, `time`, `content`) VALUES
 (6, 4, '2026-05-04 06:03:56', 'hey bro when are you hitting the gym?'),
@@ -210,11 +139,6 @@ INSERT INTO `message` (`sender`, `receiver`, `time`, `content`) VALUES
 (7, 6, '2026-05-04 06:30:33', '💪💪'),
 (10, 5, '2026-05-04 11:08:54', '💪👍🎉');
 
--- --------------------------------------------------------
-
---
--- Table structure for table `notifications`
---
 
 CREATE TABLE `notifications` (
   `notificationID` int(11) NOT NULL,
@@ -224,9 +148,7 @@ CREATE TABLE `notifications` (
   `created_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `notifications`
---
+
 
 INSERT INTO `notifications` (`notificationID`, `userID`, `message`, `is_read`, `created_at`) VALUES
 (1, 4, 'Your post was removed due to a report.', 0, '2026-05-04 01:33:01'),
@@ -257,11 +179,7 @@ INSERT INTO `notifications` (`notificationID`, `userID`, `message`, `is_read`, `
 (26, 8, 'zawad ibn shams (ID: 9) is requesting Trainer status', 1, '2026-05-04 17:17:06'),
 (27, 9, 'Congratulations! Your request to become a Trainer has been approved.', 0, '2026-05-04 17:24:56');
 
--- --------------------------------------------------------
 
---
--- Table structure for table `post`
---
 
 CREATE TABLE `post` (
   `p_id` int(11) NOT NULL,
@@ -271,9 +189,6 @@ CREATE TABLE `post` (
   `like_count` int(11) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `post`
---
 
 INSERT INTO `post` (`p_id`, `userID`, `content`, `time`, `like_count`) VALUES
 (7, 5, 'Had a great workout today!! Went swimming and played football. If anyone wishes to join please let me know!!', '2026-05-01 21:16:25', 2),
@@ -281,11 +196,6 @@ INSERT INTO `post` (`p_id`, `userID`, `content`, `time`, `like_count`) VALUES
 (12, 6, 'Im trying sleep early from now on. Wish me luck!', '2026-05-03 21:40:31', 2),
 (13, 10, 'I\'m gonna run 1 km without stopping', '2026-05-04 11:08:36', 1);
 
--- --------------------------------------------------------
-
---
--- Table structure for table `rates`
---
 
 CREATE TABLE `rates` (
   `t_userID` int(11) NOT NULL,
@@ -293,20 +203,13 @@ CREATE TABLE `rates` (
   `score` tinyint(4) NOT NULL DEFAULT 0
 ) ;
 
---
--- Dumping data for table `rates`
---
+
 
 INSERT INTO `rates` (`t_userID`, `r_userID`, `score`) VALUES
 (6, 7, 5),
 (6, 10, 1),
 (10, 7, 5);
 
--- --------------------------------------------------------
-
---
--- Table structure for table `reminder`
---
 
 CREATE TABLE `reminder` (
   `reminder_id` int(11) NOT NULL,
@@ -315,11 +218,7 @@ CREATE TABLE `reminder` (
   `time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
 
---
--- Table structure for table `report`
---
 
 CREATE TABLE `report` (
   `reportID` int(11) NOT NULL,
@@ -329,11 +228,7 @@ CREATE TABLE `report` (
   `reason` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
 
---
--- Table structure for table `reports`
---
 
 CREATE TABLE `reports` (
   `reportID` int(11) NOT NULL,
@@ -345,9 +240,7 @@ CREATE TABLE `reports` (
   `status` enum('pending','accepted','declined') DEFAULT 'pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `reports`
---
+
 
 INSERT INTO `reports` (`reportID`, `adminID`, `reportedUserID`, `reason`, `created_at`, `postID`, `status`) VALUES
 (1, 9, 6, 'do not like him', '2026-05-04 01:22:03', 9, 'accepted'),
@@ -355,11 +248,7 @@ INSERT INTO `reports` (`reportID`, `adminID`, `reportedUserID`, `reason`, `creat
 (3, 6, 7, 'yapping', '2026-05-04 02:11:53', 10, 'declined'),
 (4, 9, 6, 'yapping', '2026-05-04 04:23:23', 11, 'accepted');
 
--- --------------------------------------------------------
 
---
--- Table structure for table `users`
---
 
 CREATE TABLE `users` (
   `userID` int(11) NOT NULL,
@@ -373,9 +262,7 @@ CREATE TABLE `users` (
   `is_trainer` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `users`
---
+
 
 INSERT INTO `users` (`userID`, `email`, `name`, `password`, `streak`, `rating`, `user_type`, `status`, `is_trainer`) VALUES
 (1, '1234@gmail.com', 'yo', '$2b$10$SixPwM8WiN30aMgt9aMcJODS/mmq.Ljbp3HMSe1g2gczvTaiOGuAm', 0, NULL, 'trainer', 'active', 0),
@@ -389,11 +276,7 @@ INSERT INTO `users` (`userID`, `email`, `name`, `password`, `streak`, `rating`, 
 (9, 'zawad@gmail.com', 'zawad ibn shams', '$2b$10$yTUxtTZYgPnWqSTL/NRBoO0sUBtR/AZqiIEuslK/JK4ccEXhUpobO', 0, NULL, 'trainer', 'active', 0),
 (10, 'faaris@gmail.com', 'Faaris', '$2b$10$Escm4t4ktElR48gctjAIAOZgRM9Az3YVwfSRqxoSh9srGpHOcJ5jy', 1, NULL, 'trainer', 'active', 1);
 
--- --------------------------------------------------------
 
---
--- Table structure for table `workout`
---
 
 CREATE TABLE `workout` (
   `w_id` int(11) NOT NULL,
@@ -401,9 +284,7 @@ CREATE TABLE `workout` (
   `cal_burned_per_hour` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `workout`
---
+
 
 INSERT INTO `workout` (`w_id`, `type`, `cal_burned_per_hour`) VALUES
 (1, 'Running', 600),
@@ -419,222 +300,139 @@ INSERT INTO `workout` (`w_id`, `type`, `cal_burned_per_hour`) VALUES
 (11, 'Boxing', 750),
 (12, 'Golf', 350);
 
---
--- Indexes for dumped tables
---
 
---
--- Indexes for table `activity_log`
---
 ALTER TABLE `activity_log`
   ADD PRIMARY KEY (`log_id`),
   ADD KEY `userID` (`userID`),
   ADD KEY `w_id` (`w_id`);
 
---
--- Indexes for table `badges`
---
+
 ALTER TABLE `badges`
   ADD PRIMARY KEY (`name`);
 
---
--- Indexes for table `challenge`
---
+
 ALTER TABLE `challenge`
   ADD PRIMARY KEY (`userID`,`c_id`),
   ADD KEY `c_id` (`c_id`);
 
---
--- Indexes for table `challenge_info`
---
+
 ALTER TABLE `challenge_info`
   ADD PRIMARY KEY (`c_id`);
 
---
--- Indexes for table `earns`
---
 ALTER TABLE `earns`
   ADD PRIMARY KEY (`userID`,`name`),
   ADD KEY `name` (`name`);
 
---
--- Indexes for table `friends`
---
+
 ALTER TABLE `friends`
   ADD PRIMARY KEY (`f1UserID`,`f2UserID`),
   ADD KEY `f2UserID` (`f2UserID`);
 
---
--- Indexes for table `goals`
---
+
 ALTER TABLE `goals`
   ADD PRIMARY KEY (`goal_id`),
   ADD KEY `userID` (`userID`);
 
---
--- Indexes for table `message`
---
+
 ALTER TABLE `message`
   ADD PRIMARY KEY (`sender`,`receiver`,`time`),
   ADD KEY `receiver` (`receiver`);
 
---
--- Indexes for table `notifications`
---
 ALTER TABLE `notifications`
   ADD PRIMARY KEY (`notificationID`);
 
---
--- Indexes for table `post`
---
 ALTER TABLE `post`
   ADD PRIMARY KEY (`p_id`),
   ADD KEY `userID` (`userID`);
 
---
--- Indexes for table `rates`
---
+
 ALTER TABLE `rates`
   ADD PRIMARY KEY (`t_userID`,`r_userID`),
   ADD KEY `r_userID` (`r_userID`);
 
---
--- Indexes for table `reminder`
---
+
 ALTER TABLE `reminder`
   ADD PRIMARY KEY (`reminder_id`),
   ADD KEY `userID` (`userID`);
 
---
--- Indexes for table `report`
---
 ALTER TABLE `report`
   ADD PRIMARY KEY (`reportID`),
   ADD KEY `reporter` (`reporter`),
   ADD KEY `reported` (`reported`);
 
---
--- Indexes for table `reports`
---
+
 ALTER TABLE `reports`
   ADD PRIMARY KEY (`reportID`);
 
---
--- Indexes for table `users`
---
+
 ALTER TABLE `users`
   ADD PRIMARY KEY (`userID`),
   ADD UNIQUE KEY `email` (`email`);
 
---
--- Indexes for table `workout`
---
 ALTER TABLE `workout`
   ADD PRIMARY KEY (`w_id`);
 
---
--- AUTO_INCREMENT for dumped tables
---
 
---
--- AUTO_INCREMENT for table `activity_log`
---
+
+
 ALTER TABLE `activity_log`
   MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
---
--- AUTO_INCREMENT for table `challenge_info`
---
+
 ALTER TABLE `challenge_info`
   MODIFY `c_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
---
--- AUTO_INCREMENT for table `goals`
---
+
 ALTER TABLE `goals`
   MODIFY `goal_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
---
--- AUTO_INCREMENT for table `notifications`
---
 ALTER TABLE `notifications`
   MODIFY `notificationID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
---
--- AUTO_INCREMENT for table `post`
---
+
 ALTER TABLE `post`
   MODIFY `p_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
---
--- AUTO_INCREMENT for table `reminder`
---
+
 ALTER TABLE `reminder`
   MODIFY `reminder_id` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `report`
---
 ALTER TABLE `report`
   MODIFY `reportID` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `reports`
---
 ALTER TABLE `reports`
   MODIFY `reportID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
---
--- AUTO_INCREMENT for table `users`
---
+
 ALTER TABLE `users`
   MODIFY `userID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
---
--- AUTO_INCREMENT for table `workout`
---
+
 ALTER TABLE `workout`
   MODIFY `w_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
---
--- Constraints for dumped tables
---
 
---
--- Constraints for table `activity_log`
---
 ALTER TABLE `activity_log`
   ADD CONSTRAINT `activity_log_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`) ON DELETE CASCADE,
   ADD CONSTRAINT `activity_log_ibfk_2` FOREIGN KEY (`w_id`) REFERENCES `workout` (`w_id`) ON DELETE CASCADE;
 
---
--- Constraints for table `challenge`
---
+
 ALTER TABLE `challenge`
   ADD CONSTRAINT `challenge_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`) ON DELETE CASCADE,
   ADD CONSTRAINT `challenge_ibfk_2` FOREIGN KEY (`c_id`) REFERENCES `challenge_info` (`c_id`) ON DELETE CASCADE;
 
---
--- Constraints for table `earns`
---
+
 ALTER TABLE `earns`
   ADD CONSTRAINT `earns_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`) ON DELETE CASCADE,
   ADD CONSTRAINT `earns_ibfk_2` FOREIGN KEY (`name`) REFERENCES `badges` (`name`) ON DELETE CASCADE;
 
---
--- Constraints for table `friends`
---
+
 ALTER TABLE `friends`
   ADD CONSTRAINT `friends_ibfk_1` FOREIGN KEY (`f1UserID`) REFERENCES `users` (`userID`) ON DELETE CASCADE,
   ADD CONSTRAINT `friends_ibfk_2` FOREIGN KEY (`f2UserID`) REFERENCES `users` (`userID`) ON DELETE CASCADE;
 
---
--- Constraints for table `goals`
---
+
 ALTER TABLE `goals`
   ADD CONSTRAINT `goals_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`) ON DELETE CASCADE;
 COMMIT;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
