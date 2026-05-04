@@ -44,7 +44,7 @@ const requireAdmin = (req, res, next) => {
     res.redirect("/login");
 };
 
-/* ===================== ROUTES ===================== */
+//routes
 
 app.get("/", (req, res) => res.redirect("/login"));
 
@@ -54,7 +54,7 @@ app.get("/login", (req, res) => {
 
 app.get("/register", (req, res) => res.render("register"));
 
-/* ===================== REGISTER ===================== */
+//register
 app.post("/register", async (req, res) => {
     const { name, email, password, is_trainer } = req.body;
     const hashed = await bcrypt.hash(password, 10);
@@ -66,7 +66,7 @@ app.post("/register", async (req, res) => {
     );
 });
 
-/* ===================== LOGIN ===================== */
+//login
 app.post("/login", async (req, res) => {
     const { email, password } = req.body;
 
@@ -90,13 +90,11 @@ app.post("/login", async (req, res) => {
     });
 });
 
-/* ===================== DASHBOARD ===================== */
+//dashboard
 app.get("/dashboard", (req, res) => {
     if (!req.session.user) return res.redirect("/login");
 
     const userID = req.session.user.userID;
-
-    // IMPORTANT: always initialize session array
     
     if (!req.session.likedPosts) {
         req.session.likedPosts = [];
@@ -128,21 +126,21 @@ app.get("/dashboard", (req, res) => {
     `;
     
 
-    // STEP 1: notifications
+    //notifications
     db.query(notificationQuery, [userID], (errN, notifications) => {
         if (errN) {
             console.log("Notification error:", errN);
             notifications = [];
         }
 
-        // STEP 2: posts
+        //posts
         db.query(postQuery, (errP, posts) => {
             if (errP) {
                 console.log("Post error:", errP);
                 posts = [];
             }
 
-            // STEP 3: workouts
+            // workouts
             db.query(workoutCountQuery, [userID], (errW, result) => {
                 if (errW) {
                     console.log("Workout error:", errW);
@@ -151,7 +149,7 @@ app.get("/dashboard", (req, res) => {
 
                 const workoutCount = result[0]?.totalWorkouts || 0;
 
-                // STEP 4: goals
+                //goals
                 db.query(goalsQuery, [userID], (errG, goals) => {
                     if (errG) {
                         console.log("Goals error:", errG);
@@ -173,7 +171,7 @@ app.get("/dashboard", (req, res) => {
                                 const ratingCount = ratingResult?.[0]?.ratingCount || 0;
                                 const rating = ratingResult?.[0]?.rating || 0;
 
-                                // 🔥 ADD THIS PART (trainer request check)
+                                //trainer req
                                 db.query(
                                     "SELECT COUNT(*) AS cnt FROM notifications WHERE userID = 8 AND message LIKE ? AND is_read = 0",
                                     [`%ID: ${userID}%requesting Trainer status%`],
@@ -226,7 +224,7 @@ app.get("/dashboard", (req, res) => {
         });
     });
 });
-/* ===================== POST ===================== */
+//posting
 app.post("/post", (req, res) => {
     const userID = req.session.user.userID;
     const { content } = req.body;
@@ -238,7 +236,7 @@ app.post("/post", (req, res) => {
     );
 });
 
-/* ===================== LIKE ===================== */
+//like
 app.post("/like/:postId", (req, res) => {
     if (!req.session.user) return res.redirect("/login");
     const postId = req.params.postId;
@@ -255,6 +253,7 @@ app.post("/add-friend", (req, res) => {
     const friendID = req.body.friendID;
     const redirectTo = req.body.redirectTo || "/dashboard";
 
+    //adding friend
     db.query(
         "INSERT IGNORE INTO friends (f1UserID, f2UserID) VALUES (?, ?)",
         [userID, friendID],
@@ -273,6 +272,7 @@ app.post("/remove-friend", (req, res) => {
     const friendID = req.body.friendID;
     const redirectTo = req.body.redirectTo || "/dashboard";
 
+    //remove friend
     db.query(
         "DELETE FROM friends WHERE (f1UserID = ? AND f2UserID = ?) OR (f1UserID = ? AND f2UserID = ?)",
         [userID, friendID, friendID, userID],
@@ -282,7 +282,7 @@ app.post("/remove-friend", (req, res) => {
 
 
 
-/* ===================== REPORT POST ===================== */
+//report
 app.post("/report-post", (req, res) => {
     if (!req.session.user) return res.redirect("/login");
 
@@ -313,19 +313,18 @@ app.post("/report-post", (req, res) => {
     );
 });
 
-/* ===================== ADMIN DASHBOARD ===================== */
+// admin dashboard
 app.get("/admin", requireAdmin, (req, res) => {
-    // Fetch users
+    //show users
     db.query("SELECT userID, name, email, user_type, status FROM users", (err, users) => {
-        // Fetch posts
+        //show posts
         db.query(`SELECT post.p_id, post.content, post.time, users.name FROM post JOIN users ON post.userID = users.userID ORDER BY post.time DESC`, (err, posts) => {
-            // Fetch reports
+            //show reports
             db.query(`SELECT r.*, u.name AS reportedName FROM reports r JOIN users u ON r.reportedUserID = u.userID WHERE r.status = 'pending' ORDER BY r.created_at DESC`, (err, reports) => {
                 
-                // NEW: Fetch Pending Trainer Applications from notifications
+                // pending trainers
                 db.query("SELECT * FROM notifications WHERE message LIKE '%requesting Trainer status%' AND is_read = 0", (err, requests) => {
                     
-                    // We parse the data so the EJS can use 'parsedRequests'
                     const parsedRequests = requests.map(r => ({
                     userID: r.message.match(/\(ID: (\d+)\)/)?.[1],
                     name: r.message.match(/^(.+?) \(ID:/)?.[1],
@@ -336,7 +335,7 @@ app.get("/admin", requireAdmin, (req, res) => {
                         users,
                         posts,
                         reports,
-                        parsedRequests, // Add this
+                        parsedRequests, 
                         user: req.session.user
                     });
                 });
@@ -345,7 +344,7 @@ app.get("/admin", requireAdmin, (req, res) => {
     });
 });
 
-/* ===================== ACCEPT REPORT ===================== */
+// accept report
 app.post("/admin/report/accept", requireAdmin, (req, res) => {
     const { reportID, postID } = req.body;
 
@@ -370,7 +369,7 @@ app.post("/admin/report/accept", requireAdmin, (req, res) => {
     });
 });
 
-/* ===================== DECLINE REPORT ===================== */
+// decline report
 app.post("/admin/report/decline", requireAdmin, (req, res) => {
     const { reportID } = req.body;
 
@@ -397,7 +396,7 @@ app.post("/admin/report/decline", requireAdmin, (req, res) => {
     );
 });
 
-/* ===================== NOTIFICATION DELETE (FIXED) ===================== */
+//notif deletion
 app.post("/notification/delete", (req, res) => {
     if (!req.session.user) return res.redirect("/login");
 
@@ -480,14 +479,14 @@ app.get("/search", (req, res) => {
         friendIDs: [] 
     });
 
-    // 1. Get friend list to show "Add Friend" or "Remove Friend" buttons
+    // add friend or remove friend
     db.query(
         "SELECT f2UserID AS friendID FROM friends WHERE f1UserID = ? UNION SELECT f1UserID AS friendID FROM friends WHERE f2UserID = ?",
         [userID, userID],
         (errF, friendRows) => {
             const friendIDs = (friendRows || []).map(r => r.friendID);
 
-            // 2. Search for Users (The main change is here)
+            // search user
             db.query(
                 `SELECT u.userID, u.name, u.user_type,
                     /* Simplified Rating: 1 person = 1 star, capped at 5 */
@@ -502,7 +501,7 @@ app.get("/search", (req, res) => {
                 [`%${q}%`, q.toLowerCase(), userID],
                 (err, users) => {
                     
-                    // 3. Search for Posts
+                    // search post
                     db.query(
                         `SELECT post.p_id, post.content, post.like_count, post.time, users.name 
                          FROM post 
@@ -526,7 +525,7 @@ app.get("/search", (req, res) => {
     );
 });
 
-// GET GOALS PAGE
+//goals
 app.get("/goals", requireLogin, (req, res) => {
     const userID = req.session.user.userID;
 
@@ -547,12 +546,11 @@ app.get("/goals", requireLogin, (req, res) => {
     );
 });
 
-// ADD GOAL
+//add goal
 app.post("/goals/add", requireLogin, (req, res) => {
     const userID = req.session.user.userID;
     const { title, description, target_date } = req.body;
 
-    // validation
     if (!title || title.trim() === "") {
         return res.send("Goal title is required");
     }
@@ -568,12 +566,12 @@ app.post("/goals/add", requireLogin, (req, res) => {
     );
 });
 
-// MARK GOAL AS COMPLETE
+// goal complete 
 app.post("/goals/complete", requireLogin, (req, res) => {
     const userID = req.session.user.userID;
     const { goal_id } = req.body;
 
-    // userID check ensures users can only update their own goals
+    // user can only update own goal
     db.query(
         `UPDATE goals SET status = 'completed' 
          WHERE goal_id = ? AND userID = ?`,
@@ -585,12 +583,12 @@ app.post("/goals/complete", requireLogin, (req, res) => {
     );
 });
 
-// DELETE GOAL
+// delete goal
 app.post("/goals/delete", requireLogin, (req, res) => {
     const userID = req.session.user.userID;
     const { goal_id } = req.body;
 
-    // userID check ensures users can only delete their own goals
+    // user only deletes own goal
     db.query(
         "DELETE FROM goals WHERE goal_id = ? AND userID = ?",
         [goal_id, userID],
@@ -601,7 +599,7 @@ app.post("/goals/delete", requireLogin, (req, res) => {
     );
 });
 
-// ── HELPER: get or create today's challenge ──
+//daily challenge
 function getTodaysChallenge(callback) {
     const today = new Date().toISOString().split("T")[0];
 
@@ -612,10 +610,10 @@ function getTodaysChallenge(callback) {
         (err, results) => {
             if (err) return callback(err, null);
 
-            // exists — return it
+        
             if (results.length > 0) return callback(null, results[0]);
 
-            // pick random workout type for today's challenge
+            // random workout for daily challenge
             db.query(
                 "SELECT * FROM workout ORDER BY RAND() LIMIT 1",
                 (err, workouts) => {
@@ -645,7 +643,7 @@ function getTodaysChallenge(callback) {
     );
 }
 
-// ── HELPER: check and award badge ──
+// give badge
 function checkAndAwardBadge(userID, streak, callback) {
     let badgeName = null;
 
@@ -698,14 +696,14 @@ function checkAndAwardBadge(userID, streak, callback) {
     );
 }
 
-// GET CHALLENGE PAGE
+// challenge
 app.get("/challenge", requireLogin, (req, res) => {
     const userID = req.session.user.userID;
 
     getTodaysChallenge((err, challenge) => {
         if (err) return res.send("Error loading challenge: " + err.message);
 
-        // check if user already joined today's challenge
+        // check if user joined daily challenge
         db.query(
             "SELECT * FROM challenge WHERE userID = ? AND c_id = ?",
             [userID, challenge.c_id],
@@ -714,14 +712,14 @@ app.get("/challenge", requireLogin, (req, res) => {
 
                 const alreadyCompleted = joined.length > 0;
 
-                // get user streak
+                //streak
                 db.query(
                     "SELECT streak FROM users WHERE userID = ?",
                     [userID],
                     (err, userResult) => {
                         if (err) return res.send("Error fetching streak");
 
-                        // get user badges from earns table
+                        // badge from earns table
                         db.query(
                             `SELECT earns.name, earns.date, badges.description
                              FROM earns
@@ -766,7 +764,7 @@ app.get("/challenge", requireLogin, (req, res) => {
     });
 });
 
-// COMPLETE CHALLENGE
+//complete challenge
 app.post("/challenge/complete", requireLogin, (req, res) => {
     const userID = req.session.user.userID;
 
@@ -788,7 +786,7 @@ app.post("/challenge/complete", requireLogin, (req, res) => {
                     (err) => {
                         if (err) return res.send("Error completing challenge: " + err.message);
 
-                        // increment streak
+                        // increase streak
                         db.query(
                             "UPDATE users SET streak = streak + 1 WHERE userID = ?",
                             [userID],
@@ -827,7 +825,7 @@ app.post("/challenge/complete", requireLogin, (req, res) => {
 
 app.get("/friends", requireLogin, (req, res) => {
     const userID = req.session.user.userID;
-
+// friends list
     db.query(
         `SELECT u.userID, u.name, u.streak, u.user_type,
             ROUND(AVG(r.score), 1) AS rating,
@@ -849,7 +847,7 @@ app.get("/friends", requireLogin, (req, res) => {
         }
     );
 });
-// GET CHAT PAGE
+// chat page
 app.get("/chat/:friendID", requireLogin, (req, res) => {
     const userID = req.session.user.userID;
     const friendID = parseInt(req.params.friendID);
@@ -868,7 +866,7 @@ app.get("/chat/:friendID", requireLogin, (req, res) => {
                 (err2, friendRows) => {
                     if (err2 || friendRows.length === 0) return res.redirect("/friends");
 
-                    // get all messages between these two users
+                    // message history
                     db.query(
                         `SELECT m.sender, m.content, m.time, u.name
                          FROM message m
@@ -893,21 +891,21 @@ app.get("/chat/:friendID", requireLogin, (req, res) => {
     );
 });
 
-// POST SEND MESSAGE
+// post send message
 app.post("/chat/:friendID", requireLogin, (req, res) => {
     const userID = req.session.user.userID;
     const friendID = parseInt(req.params.friendID);
     const { content } = req.body;
 
     if (!content || content.trim() === "") return res.redirect("/chat/" + friendID);
-
+//Sendi a message
     db.query(
         "INSERT INTO message (sender, receiver, content) VALUES (?, ?, ?)",
         [userID, friendID, content.trim()],
         () => res.redirect("/chat/" + friendID)
     );
 });
-// RATE A TRAINER
+// rating trainer
 app.post("/rate-trainer", requireLogin, (req, res) => {
     const userID = req.session.user.userID;
     const { trainerID, score } = req.body;
@@ -920,22 +918,21 @@ app.post("/rate-trainer", requireLogin, (req, res) => {
         () => res.redirect("/friends")
     );
 });
-// NEW: User applies to be a trainer
+// trainer application
 app.post("/apply-trainer", requireLogin, (req, res) => {
     const userID = req.session.user.userID;
 
-    // Check if already requested
+    // Check if already applied
     db.query(
         "SELECT * FROM notifications WHERE message LIKE ? AND is_read = 0",
         [`%ID: ${userID}) is requesting Trainer status%`],
         (err, existing) => {
 
             if (existing && existing.length > 0) {
-                // already requested → do nothing
                 return res.redirect("/dashboard");
             }
 
-            // send request to admin (change 8 if needed)
+            // send admin request
             db.query(
                 "INSERT INTO notifications (userID, message, is_read) VALUES (?, ?, 0)",
                 [8, `${req.session.user.name} (ID: ${userID}) requesting Trainer status`],
@@ -946,28 +943,26 @@ app.post("/apply-trainer", requireLogin, (req, res) => {
 });
 
 
-/* ===================== APPROVE TRAINER ===================== */
+//approve trainer
 app.post("/admin/trainer/approve", requireAdmin, (req, res) => {
     const { userID, notificationID } = req.body;
 
-    // 1. Update the user's type to 'trainer'
+    //change from normal user to trainer
     db.query(
         "UPDATE users SET user_type = 'trainer' WHERE userID = ?",
         [userID],
         (err) => {
             if (err) return res.send("Error updating user role");
 
-            // 2. Mark the application notification as 'read' (processed)
             db.query(
                 "UPDATE notifications SET is_read = 1 WHERE notificationID = ?",
                 [notificationID],
                 () => {
-                    // 3. Send a confirmation notification to the user
+                    // send notification to the user
                     db.query(
                         "INSERT INTO notifications (userID, message, is_read) VALUES (?, ?, 0)",
                         [userID, "Congratulations! Your request to become a Trainer has been approved."]
                     );
-
                     res.redirect("/admin");
                 }
             );
@@ -975,17 +970,17 @@ app.post("/admin/trainer/approve", requireAdmin, (req, res) => {
     );
 });
 
-/* ===================== DECLINE TRAINER ===================== */
+//decline trainer
 app.post("/admin/trainer/decline", requireAdmin, (req, res) => {
     const { userID, notificationID } = req.body;
 
-    // 1. Mark request as handled
+    
     db.query(
         "UPDATE notifications SET is_read = 1 WHERE notificationID = ?",
         [notificationID],
         () => {
 
-            // 2. Notify user
+            // notify user
             db.query(
                 "INSERT INTO notifications (userID, message, is_read) VALUES (?, ?, 0)",
                 [userID, "Your request to become a Trainer has been declined."]
@@ -1012,7 +1007,6 @@ app.get("/admin/user/:userID", requireAdmin, (req, res) => {
         );
     });
 });
-/* ===================== SERVER ===================== */
 app.listen(3000, () => {
     console.log("http://localhost:3000");
 });
