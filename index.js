@@ -120,9 +120,9 @@ app.get("/dashboard", (req, res) => {
     `;
 
     const goalsQuery = `
-        SELECT * FROM goals 
-        WHERE userID = ? AND is_completed = 0
-        ORDER BY target_date ASC
+    SELECT * FROM goals 
+    WHERE userID = ? AND is_completed = 0
+    ORDER BY target_date ASC
     `;
     
 
