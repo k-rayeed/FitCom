@@ -131,12 +131,7 @@
                         <div style="font-family:'Bebas Neue',sans-serif; font-size:2.8rem; color:#c8f135; letter-spacing:2px;">
                             <%= challenge.name %>
                         </div>
-                        <div style="color:#9ca3b0; font-size:1rem; margin-top:6px;">
-                            for <span style="color:#f0f2f8; font-weight:700;"><%= challenge.duration %> minutes</span>
-                        </div>
-                        <div style="color:#5a5f75; font-size:0.875rem; margin-top:4px;">
-                            ~<%= Math.round(challenge.duration / 60 * challenge.cal_burned_per_hour) %> calories
-                        </div>
+                        
                     </div>
 
                     <!-- STREAK PROGRESS TO NEXT BADGE -->
@@ -208,18 +203,19 @@
                         </div>
                     <% } else { %>
                         <div style="display:flex; flex-wrap:wrap; gap:12px;">
+                            <!-- CORRECT — uses badge.name and badge.date to match earns table -->
                             <% badges.forEach(badge => { %>
                                 <%
-                                    const bEmoji = badge.badge_type === 'gold' ? '🥇' : badge.badge_type === 'silver' ? '🥈' : '🥉';
-                                    const bColor = badge.badge_type === 'gold' ? '#c8f135' : badge.badge_type === 'silver' ? '#9ca3b0' : '#cd7f32';
+                                    const bEmoji = badge.name === 'Gold' ? '🥇' : badge.name === 'Silver' ? '🥈' : '🥉';
+                                    const bColor = badge.name === 'Gold' ? '#c8f135' : badge.name === 'Silver' ? '#9ca3b0' : '#cd7f32';
                                 %>
                                 <div style="background:#0f1117; border:1px solid #2a2d3a; border-radius:10px; padding:14px 18px; text-align:center; min-width:90px;">
                                     <div style="font-size:2rem;"><%= bEmoji %></div>
                                     <div style="font-size:0.78rem; font-weight:700; color:<%= bColor %>; margin-top:6px; text-transform:uppercase;">
-                                        <%= badge.badge_type %>
+                                        <%= badge.name %>
                                     </div>
                                     <div style="font-size:0.7rem; color:#5a5f75; margin-top:2px;">
-                                        <%= new Date(badge.earned_at).toLocaleDateString() %>
+                                        <%= new Date(badge.date).toLocaleDateString() %>
                                     </div>
                                 </div>
                             <% }) %>
@@ -232,29 +228,7 @@
             <!-- RIGHT COLUMN -->
             <div class="dash-col">
 
-                <!-- CHALLENGE HISTORY -->
-                <div class="dash-card">
-                    <div class="card-title">📋 Recent Completions</div>
-
-                    <% if (history.length === 0) { %>
-                        <div class="empty-state">No challenges completed yet — start today!</div>
-                    <% } else { %>
-                        <% history.forEach((h, index) => { %>
-                        <div style="display:flex; align-items:center; gap:14px; padding:12px 0; border-bottom:1px solid #1e2130;">
-                            <div style="width:36px; height:36px; background:rgba(200,241,53,0.1); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0;">
-                                <%= icons[h.type] || '💪' %>
-                            </div>
-                            <div style="flex:1;">
-                                <div style="font-weight:600; color:#f0f2f8; font-size:0.875rem;"><%= h.type %></div>
-                                <div style="font-size:0.78rem; color:#5a5f75;"><%= h.duration %> mins</div>
-                            </div>
-                            <div style="font-size:0.75rem; color:#5a5f75;">
-                                <%= new Date(h.completed_at).toLocaleDateString() %>
-                            </div>
-                        </div>
-                        <% }) %>
-                    <% } %>
-                </div>
+                
 
                 <!-- HOW BADGES WORK -->
                 <div class="dash-card">
