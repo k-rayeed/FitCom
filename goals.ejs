@@ -4,11 +4,8 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FitCom</title>
-
+    <title>FitCom — Goals</title>
     <link rel="stylesheet" href="/style.css">
-
-    <!-- SAME FONT EVERYWHERE -->
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="dash-body">
@@ -19,39 +16,17 @@
         <div class="sidebar-logo">
             ⚡ <span class="logo-text">FITCOM</span>
         </div>
-
         <nav class="sidebar-nav">
-
-            <a href="/dashboard" class="nav-item <%= active === 'dashboard' ? 'active' : '' %>">
-                🏠 Home
-            </a>
-
-            <a href="/friends" class="nav-item <%= active === 'friends' ? 'active' : '' %>">
-                👥 Friends
-            </a>
-
-            <a href="/activity_log" class="nav-item <%= active === 'activity' ? 'active' : '' %>">
-                📋 Activity Log
-            </a>
-
-            <a href="/goals" class="nav-item <%= active === 'goals' ? 'active' : '' %>">
-                🎯 Goals
-            </a>
-
-            <a href="/challenge" class="nav-item <%= active === 'challenge' ? 'active' : '' %>">
-                ⚡ Daily Challenge
-            </a>
-
-            <a href="/search" class="nav-item <%= active === 'search' ? 'active' : '' %>">
-                🔍 Search
-            </a>
-
+            <a href="/dashboard" class="nav-item <%= active === 'dashboard' ? 'active' : '' %>">🏠 Home</a>
+            <a href="/friends" class="nav-item <%= active === 'friends' ? 'active' : '' %>">👥 Friends</a>
+            <a href="/activity_log" class="nav-item <%= active === 'activity' ? 'active' : '' %>">📋 Activity Log</a>
+            <a href="/goals" class="nav-item <%= active === 'goals' ? 'active' : '' %>">🎯 Goals</a>
+            <a href="/challenge" class="nav-item <%= active === 'challenge' ? 'active' : '' %>">⚡ Daily Challenge</a>
+            <a href="/search" class="nav-item <%= active === 'search' ? 'active' : '' %>">🔍 Search</a>
         </nav>
-
         <a href="/logout" class="sidebar-logout">🚪 Logout</a>
     </aside>
 
-    <!-- MAIN -->
     <main class="dash-main">
 
         <!-- HEADER -->
@@ -67,15 +42,11 @@
                 <div class="stat-label">Total Goals</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value">
-                    <%= goals.filter(g => g.status === 'in_progress').length %>
-                </div>
+                <div class="stat-value"><%= goals.filter(g => g.status === 'in_progress').length %></div>
                 <div class="stat-label">In Progress</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value">
-                    <%= goals.filter(g => g.status === 'completed').length %>
-                </div>
+                <div class="stat-value"><%= goals.filter(g => g.status === 'completed').length %></div>
                 <div class="stat-label">Completed</div>
             </div>
             <div class="stat-card">
@@ -169,34 +140,38 @@
 
                             <!-- DESCRIPTION -->
                             <% if (goal.description) { %>
-                                <div style="color:#5a5f75; font-size:0.875rem; line-height:1.5; margin-bottom:10px;">
+                                <div style="font-size:0.875rem; line-height:1.5; margin-bottom:10px;">
                                     <%= goal.description %>
                                 </div>
                             <% } %>
 
-                            <!-- TARGET DATE -->
+                            <!-- TARGET DATE — fixed, no inline ternary in style -->
                             <% if (goal.target_date) { %>
+                                <%
+                                    const isOverdue = new Date(goal.target_date) < new Date();
+                                    const dateColor = isOverdue ? '#ff6b6b' : '#c8f135';
+                                    const overdueText = isOverdue ? ' (Overdue)' : '';
+                                %>
                                 <div style="font-size:0.78rem; color:#5a5f75; margin-bottom:12px;">
-                                    🗓 Target: 
-                                    <span style="color:<%= new Date(goal.target_date) < new Date() ? '#ff6b6b' : '#c8f135' %>">
-                                        <%= new Date(goal.target_date).toLocaleDateString() %>
-                                        <%= new Date(goal.target_date) < new Date() ? '(Overdue)' : '' %>
+                                    🗓 Target:
+                                    <span style="color:<%= dateColor %>">
+                                        <%= new Date(goal.target_date).toLocaleDateString() %><%= overdueText %>
                                     </span>
                                 </div>
                             <% } %>
 
-                            <!-- ACTIONS -->
+                            <!-- ACTIONS — same pattern as challenge complete button -->
                             <div style="display:flex; gap:8px;">
                                 <form action="/goals/complete" method="POST" style="margin:0;">
                                     <input type="hidden" name="goal_id" value="<%= goal.goal_id %>" />
-                                    <button type="submit" class="btn-accent" style="font-size:0.78rem; padding:6px 14px;">
+                                    <button type="submit" class="btn-main" style="font-size:0.78rem; padding:8px 16px;">
                                         ✅ Mark Complete
                                     </button>
                                 </form>
                                 <form action="/goals/delete" method="POST" style="margin:0;">
                                     <input type="hidden" name="goal_id" value="<%= goal.goal_id %>" />
                                     <button type="submit"
-                                        style="background:none; border:1px solid #2a2d3a; color:#5a5f75; border-radius:8px; padding:6px 14px; font-size:0.78rem; cursor:pointer; font-family:'Inter',sans-serif;"
+                                        style="background:none; border:1px solid #2a2d3a; border-radius:8px; padding:8px 16px; font-size:0.78rem; cursor:pointer; font-family:'Inter',sans-serif;"
                                         onclick="return confirm('Delete this goal?')">
                                         🗑 Delete
                                     </button>
@@ -217,17 +192,17 @@
                         <div class="empty-state">No completed goals yet — keep going!</div>
                     <% } else { %>
                         <% completed.forEach(goal => { %>
-                        <div style="background:#0f1117; border:1px solid #2a2d3a; border-radius:10px; padding:16px; margin-bottom:12px; opacity:0.7;">
+                        <div style="background:#0f1117; border:1px solid rgba(0,230,118,0.2); border-radius:10px; padding:16px; margin-bottom:12px;">
 
                             <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;">
-                                <div style="font-weight:600; color:#f0f2f8; font-size:0.95rem; text-decoration:line-through;">
+                                <div style="font-weight:600; color:#f0f2f8; font-size:0.95rem; text-decoration:line-through; opacity:0.6;">
                                     <%= goal.title %>
                                 </div>
-                                <span class="badge badge-admin">Completed</span>
+                                <span class="badge badge-active">Completed ✅</span>
                             </div>
 
                             <% if (goal.description) { %>
-                                <div style="color:#5a5f75; font-size:0.875rem; line-height:1.5; margin-bottom:10px;">
+                                <div style="font-size:0.875rem; line-height:1.5; margin-bottom:10px; opacity:0.6;">
                                     <%= goal.description %>
                                 </div>
                             <% } %>
@@ -239,7 +214,7 @@
                             <form action="/goals/delete" method="POST" style="margin:0;">
                                 <input type="hidden" name="goal_id" value="<%= goal.goal_id %>" />
                                 <button type="submit"
-                                    style="background:none; border:1px solid #2a2d3a; color:#5a5f75; border-radius:8px; padding:6px 14px; font-size:0.78rem; cursor:pointer; font-family:'Inter',sans-serif;"
+                                    style="background:none; border:1px solid #2a2d3a; border-radius:8px; padding:6px 14px; font-size:0.78rem; cursor:pointer; font-family:'Inter',sans-serif;"
                                     onclick="return confirm('Delete this goal?')">
                                     🗑 Delete
                                 </button>
