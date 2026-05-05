@@ -111,6 +111,7 @@ CREATE TABLE `goals` (
   `target_date` date DEFAULT NULL,
   `is_completed` tinyint(4) DEFAULT 0,
   `created_at` datetime DEFAULT current_timestamp()
+  `status` varchar(20) DEFAULT 'in_progress'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
